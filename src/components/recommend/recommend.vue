@@ -1,8 +1,12 @@
 <template>
   <div class="recommend">
       <div class="recommend-content">
-          <div class="slider-wraper">
-
+          <div v-if="recommends.length" class="slider-wraper">
+              <slider>
+                  <div v-for="(item,ind) in recommends" :key="ind" slot="sliderImg">
+                      <img :src="item.picUrl" />
+                  </div>
+              </slider>
           </div>
           <div class="recommend-list">
               <h1 class="list-title">热门歌单推荐</h1>
@@ -17,8 +21,14 @@
 <script>
     import getRecommend from '../../api/recommend.js'
     import {ERR_OK} from '../../api/config.js'
+    import Slider from '@/base/slider/slider.vue'
 
     export default {
+        data() {
+            return {
+                recommends:[]
+            }
+        },
         created() {
             this._getRecommend();
         },
@@ -26,14 +36,20 @@
             _getRecommend() {
                 getRecommend().then((res) => {
                     if(res.code === ERR_OK)
+                    {
                         console.log(res.data.slider);
+                        this.recommends = res.data.slider;
+                    }   
                 })
             }
+        },
+        components:{
+            Slider:Slider
         }
     }
 </script>
 
-<style lang="stylus" scoped>
+<style scoped lang="stylus" rel="stylesheet/stylus">
     // @import '../../common/stylus/variable'
     // .recommend
     // position: fixed

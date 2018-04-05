@@ -14,7 +14,7 @@ import _ from 'underscore'
 import $ from 'jquery'
 import {addClass} from '@/common/js/dom.js'
 
-export default {
+export default { 
   props:{
       loop:{
           type:Boolean,

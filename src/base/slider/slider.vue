@@ -47,9 +47,15 @@ export default {
           if(this.autoPlay)
             this._play();
       },20)
+      $(window).resize(() => {
+          if(!this.slider)
+            return;
+          this._setSliderWidth(true);
+          this.slider.refresh();
+      })
   },
   methods: {
-      _setSliderWidth() {
+      _setSliderWidth(resize) {
           this.children = this.$refs.sliderGroup.children;
           let width = 0;
           let sliderWidth = this.$refs.slider.clientWidth;
@@ -58,7 +64,7 @@ export default {
               item.style.width = sliderWidth + 'px';
               width += sliderWidth;
           });
-          if(this.loop)
+          if(this.loop && !resize)
             width += 2*sliderWidth;
           this.$refs.sliderGroup.style.width = width + 'px';
       },
@@ -98,6 +104,9 @@ export default {
           this.slider.goToPage(pageIndex, 0, 400)
         }, this.interval)
       }
+  },
+  destroyed() {
+      clearTimeout(this.timer);
   }
 }
 </script>

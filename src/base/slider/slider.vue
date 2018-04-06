@@ -5,6 +5,10 @@
 
           </slot>
       </div>
+      <div class="dots">
+          <span class="dot" :class="{active: currentPageIndex == index}" 
+          v-for="(item, index) in dots" :key="index"></span>
+      </div>
   </div>
 </template>
 
@@ -15,6 +19,12 @@ import $ from 'jquery'
 import {addClass} from '@/common/js/dom.js'
 
 export default { 
+    data() {
+        return {
+            dots:[],
+            currentPageIndex: 0
+        }
+    },
   props:{
       loop:{
           type:Boolean,
@@ -32,7 +42,10 @@ export default {
   mounted() {
       setTimeout(() => {
           this._setSliderWidth();
+          this._initDots();
           this._initSlider();
+          if(this.autoPlay)
+            this._play();
       },20)
   },
   methods: {
@@ -60,6 +73,30 @@ export default {
                 snapSpeed:100,
                 click:true
           })
+          this.slider.on('scrollEnd', () =>  {
+              let pageIndex = this.slider.getCurrentPage().pageX;
+              if(this.loop)
+                pageIndex -= 1;
+              this.currentPageIndex = pageIndex;
+              if(this.autoPlay)
+              {
+                  clearTimeout(this.timer);
+                  this._play();
+                  
+              }
+          })
+      },
+      _initDots() {
+          this.dots = new Array(this.children.length);
+      },
+      _play() {
+        let pageIndex = this.currentPageIndex + 1
+        if (this.loop) {
+          pageIndex += 1
+        }
+        this.timer = setTimeout(() => {
+          this.slider.goToPage(pageIndex, 0, 400)
+        }, this.interval)
       }
   }
 }
@@ -69,6 +106,7 @@ export default {
 
   .slider
     min-height: 1px
+    position: relative
     .slider-group
       position: relative
       overflow: hidden

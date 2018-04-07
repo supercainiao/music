@@ -26,6 +26,9 @@
                     </ul>
                 </div>
             </div>
+            <div class="loading-container" v-show="!discList.length">
+                <loading></loading>
+            </div>
       </scroll>
   </div>
 </template>
@@ -35,6 +38,7 @@
     import {ERR_OK} from '../../api/config.js'
     import Slider from '@/base/slider/slider.vue'
     import Scroll from '@/base/scroll/scroll.vue'
+    import Loading from '@/base/loading/loading.vue'
 
     export default {
         data() {
@@ -72,7 +76,8 @@
         },
         components:{
             Slider:Slider,
-            Scroll:Scroll
+            Scroll:Scroll,
+            Loading:Loading
         }
     }
 </script>

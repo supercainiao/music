@@ -1,6 +1,7 @@
 <template>
   <div class="singer">
-      <listview :data="singers"></listview>
+      <listview :data="singers" @select="selectSinger"></listview>
+      <router-view></router-view>
       <div class="loading-container" v-show="!singers.length">
         <loading></loading>
       </div>
@@ -13,6 +14,7 @@ import {ERR_OK} from '../../api/config.js'
 import Singer from '@/common/js/singer.js'
 import Listview from '@/base/listview/listview.vue'
 import Loading from '@/base/loading/loading.vue'
+import {mapMutations} from 'vuex'
 const HOT_NAME = '热门';
 const HOT_SINGER_LEN = 10;
 export default {
@@ -25,6 +27,12 @@ export default {
     this._getSingerList();
   },
   methods: {
+    selectSinger(singer) {
+      this.$router.push({
+        path:`/singer/${singer.id}`
+      })
+      this.setSinger(singer)
+    },
     _getSingerList() {
       getSingerList().then((res) => {
         // console.log(res);
@@ -78,7 +86,10 @@ export default {
         return a.title.localeCompare(b.title);
       })
       return [...hot,...ret]
-    }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    })
   },
   components: {
     Listview,

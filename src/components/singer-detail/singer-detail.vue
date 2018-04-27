@@ -39,7 +39,7 @@ export default {
               }
           })
       },
-      _normalizeSongs(list) {
+      _normalizeSongs(list) { 
           let ret = []
           list.forEach(item => {
               let {musicData} = item;
